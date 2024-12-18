@@ -1,0 +1,178 @@
+HTML : 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollment App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Student Enrollment</h1>
+    <div id="app">
+        <!-- Login/Register Form -->
+        <div id="login-form">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <button onclick="showRegister()">Register</button>
+        </div>
+
+        <div id="register-form" style="display:none;">
+            <h2>Register</h2>
+            <input type="text" id="reg-username" placeholder="Username">
+            <input type="password" id="reg-password" placeholder="Password">
+            <button onclick="register()">Register</button>
+            <button onclick="showLogin()">Back to Login</button>
+        </div>
+
+        <!-- Enrollment Section -->
+        <div id="enrollment" style="display:none;">
+            <h2>Enroll Subjects</h2>
+            <select id="subjects">
+                <option value="Math">Math (3 Credits)</option>
+                <option value="Science">Science (4 Credits)</option>
+                <option value="History">History (2 Credits)</option>
+            </select>
+            <button onclick="addSubject()">Add Subject</button>
+
+            <h3>Selected Subjects:</h3>
+            <ul id="subject-list"></ul>
+            <p>Total Credits: <span id="total-credits">0</span></p>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  Hello world
+  <script src="script.js"></script>
+</body>
+
+</html>
+
+
+CSS : 
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+input {
+  margin: 5px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+#enrollment {
+  margin-top: 20px;
+}
+
+#subject-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+
+JAVA SCRIPT : 
+
+let users = []; // Mock database for users
+let enrolledSubjects = []; // User's subjects
+const maxCredits = 24; // Credit limit
+
+function showRegister() {
+    document.getElementById("login-form").style.display = "none";
+    document.getElementById("register-form").style.display = "block";
+}
+
+function showLogin() {
+    document.getElementById("login-form").style.display = "block";
+    document.getElementById("register-form").style.display = "none";
+}
+
+function register() {
+    const username = document.getElementById("reg-username").value;
+    const password = document.getElementById("reg-password").value;
+
+    if (username && password) {
+        users.push({ username, password });
+        alert("Registration successful!");
+        showLogin();
+    } else {
+        alert("Please fill in all fields!");
+    }
+}
+
+function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const user = users.find(u => u.username === username && u.password === password);
+    if (user) {
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("enrollment").style.display = "block";
+    } else {
+        alert("Invalid username or password!");
+    }
+}
+
+function addSubject() {
+    const subjectSelect = document.getElementById("subjects");
+    const selectedSubject = subjectSelect.value;
+
+    let credits = 0;
+    if (selectedSubject === "Math") credits = 3;
+    else if (selectedSubject === "Science") credits = 4;
+    else if (selectedSubject === "History") credits = 2;
+
+    const totalCredits = enrolledSubjects.reduce((sum, subj) => sum + subj.credits, 0);
+    if (totalCredits + credits > maxCredits) {
+        alert("Cannot enroll. Credit limit exceeded!");
+        return;
+    }
+
+    enrolledSubjects.push({ name: selectedSubject, credits });
+    renderSubjects();
+}
+
+function renderSubjects() {
+    const list = document.getElementById("subject-list");
+    const totalCreditsElem = document.getElementById("total-credits");
+
+    list.innerHTML = "";
+    let totalCredits = 0;
+
+    enrolledSubjects.forEach(subj => {
+        totalCredits += subj.credits;
+        const li = document.createElement("li");
+        li.textContent = `${subj.name} (${subj.credits} Credits)`;
+        list.appendChild(li);
+    });
+
+    totalCreditsElem.textContent = totalCredits;
+}
+
+
+
+NOTES : 
+I'M SORRY SIR, BECAUSE DID NOT USE ANDROID BECAUSE MY LAPTOP CANNOT LOAD ANDROID STUIO. AND FOR THE VS CODE, IT CANNOT WORKS AND ALWAYS ERROR. THAT'S WHY I USE HTML, CSS, AND JS. I HOPE I GOT A SCORE ISR, EVEN IT IS JUST B- OR C
