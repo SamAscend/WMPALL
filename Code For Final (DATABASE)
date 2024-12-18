@@ -1,0 +1,76 @@
+-- Create the `students` table to store student data
+CREATE TABLE students (
+    student_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+
+-- Create the `subjects` table to store subject information
+CREATE TABLE subjects (
+    subject_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subject_name TEXT NOT NULL,
+    credits INTEGER NOT NULL
+);
+
+-- Create the `enrollment` table to store student enrollments
+CREATE TABLE enrollment (
+    enrollment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL,
+    subject_id INTEGER NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(subject_id) ON DELETE CASCADE
+);
+
+-- Insert sample students
+INSERT INTO students (name, email, password) 
+VALUES 
+('John Doe', 'john@example.com', 'password123'),
+('Jane Smith', 'jane@example.com', 'mypassword');
+
+-- Insert sample subjects
+INSERT INTO subjects (subject_name, credits)
+VALUES 
+('Math', 4),
+('Physics', 3),
+('Chemistry', 4),
+('Biology', 3),
+('Computer Science', 5),
+('History', 2),
+('Literature', 3);
+
+-- Example Query: Calculate the total credits for a student
+SELECT SUM(s.credits) AS total_credits
+FROM enrollment e
+JOIN subjects s ON e.subject_id = s.subject_id
+WHERE e.student_id = 1;
+
+-- Example Query: Enroll a student in a subject (with credit limit check)
+INSERT INTO enrollment (student_id, subject_id)
+SELECT 1, 3 -- Example: student_id = 1, subject_id = 3 (Chemistry)
+WHERE (SELECT COALESCE(SUM(s.credits), 0) 
+       FROM enrollment e 
+       JOIN subjects s ON e.subject_id = s.subject_id 
+       WHERE e.student_id = 1) + 
+       (SELECT credits FROM subjects WHERE subject_id = 3) <= 24;
+
+-- Example Query: List all subjects a student is enrolled in
+SELECT s.subject_name, s.credits
+FROM enrollment e
+JOIN subjects s ON e.subject_id = s.subject_id
+WHERE e.student_id = 1;
+
+-- Example Query: Get total credits for a student's enrollment
+SELECT SUM(s.credits) AS total_credits
+FROM enrollment e
+JOIN subjects s ON e.subject_id = s.subject_id
+WHERE e.student_id = 1;
+
+-- Example Query: Remove a subject from a student's enrollment
+DELETE FROM enrollment
+WHERE student_id = 1 AND subject_id = 3;
+
+-- Drop tables (for cleanup/testing)
+-- DROP TABLE IF EXISTS enrollment;
+-- DROP TABLE IF EXISTS subjects;
+-- DROP TABLE IF EXISTS students;
